@@ -1841,6 +1841,15 @@
             "required": false
           },
           {
+            "name": "all",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["true", "false"]
+            },
+            "required": false
+          },
+          {
             "name": "roots",
             "in": "query",
             "schema": {

@@ -67,6 +67,7 @@ export function DialogSessionList() {
         search: input.search,
         roots: true,
         worktrees: true,
+        all: input.global ? "true" : undefined, // kilocode_change
         current: input.global ? undefined : "true",
         directory: input.global ? undefined : input.directory,
         limit: input.limit,
@@ -283,7 +284,7 @@ export function DialogSessionList() {
 
   return (
     <DialogSelect
-      title={global() ? "Sessions (all worktrees)" : "Sessions (current worktree)"} // kilocode_change
+      title={global() ? "Sessions (all projects)" : "Sessions (current folder)"} // kilocode_change
       options={options()}
       skipFilter={true}
       preserveSelection={true}

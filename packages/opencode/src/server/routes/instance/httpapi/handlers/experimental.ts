@@ -219,8 +219,10 @@ export const experimentalHandlers = HttpApiBuilder.group(InstanceHttpApi, "exper
       const limit = ctx.query.limit ?? 100
       // kilocode_change start
       const state = yield* InstanceState.context
-      const projectID = ctx.query.worktrees && !ctx.query.projectID ? state.project.id : ctx.query.projectID
-      const roots = ctx.query.worktrees ? yield* WorktreeFamily.list() : undefined
+      const wide = ctx.query.all ?? false
+      const pin = ctx.query.worktrees && !ctx.query.projectID && !wide
+      const projectID = pin ? state.project.id : ctx.query.projectID
+      const roots = ctx.query.worktrees && !wide ? yield* WorktreeFamily.list() : undefined
       const directory = ctx.query.current ? ctx.query.directory : undefined
       const sorted = roots ? [...roots].sort((a, b) => b.length - a.length) : undefined
       const current = sorted && directory ? sorted.find((dir) => Filesystem.contains(dir, directory)) : undefined

@@ -89,6 +89,9 @@ export const SessionListQuery = Schema.Struct({
   projectID: Schema.optional(Schema.String),
   worktrees: Schema.optional(QueryBoolean),
   current: Schema.optional(QueryBoolean),
+  all: Schema.optional(QueryBoolean).annotate({
+    description: "List sessions from every project, not only the current one.",
+  }),
   // kilocode_change end
   roots: Schema.optional(QueryBoolean),
   start: Schema.optional(Schema.NumberFromString),

@@ -12142,6 +12142,7 @@ export type ExperimentalSessionListData = {
     projectID?: string
     worktrees?: boolean
     current?: "true" | "false"
+    all?: "true" | "false"
     roots?: boolean | "true" | "false"
     start?: number
     cursor?: number

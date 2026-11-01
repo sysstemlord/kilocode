@@ -272,4 +272,38 @@ describe("experimental.session.list", () => {
       await $`git worktree remove ${worktree}`.cwd(first.path).quiet().nothrow()
     }
   })
+
+  test("all=true lists sessions from every project", async () => {
+    await using first = await tmpdir({ git: true })
+    await using second = await tmpdir({ git: true })
+
+    const { Server } = await import("../../src/server/server")
+    const app = Server.Default().app
+
+    const root = await withTestInstance({
+      directory: first.path,
+      fn: (ctx) => create("root-session", ctx),
+    })
+    const other = await withTestInstance({
+      directory: second.path,
+      fn: (ctx) => create("other-project-session", ctx),
+    })
+
+    const scoped = await app.request("/experimental/session?roots=true&worktrees=true", {
+      headers: { "x-kilo-directory": first.path },
+    })
+    const wide = await app.request("/experimental/session?roots=true&worktrees=true&all=true", {
+      headers: { "x-kilo-directory": first.path },
+    })
+
+    expect(scoped.status).toBe(200)
+    expect(wide.status).toBe(200)
+    const scopedIds = (await scoped.json()).map((item: { id: string }) => item.id)
+    const wideIds = (await wide.json()).map((item: { id: string }) => item.id)
+
+    expect(scopedIds).toContain(root.id)
+    expect(scopedIds).not.toContain(other.id)
+    expect(wideIds).toContain(root.id)
+    expect(wideIds).toContain(other.id)
+  })
 })
